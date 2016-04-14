@@ -34,6 +34,12 @@ auth.set_access_token(access_token, access_secret)
 
 api = tweepy.API(auth)
 
+track_stay = ['#yes2eu', '#yestoeu', '#betteroffin', '#votein', '#ukineu', '#bremain', '#strongerin', '#leadnotleave', '#voteremain']
+
+track_leave = ['#brexit', '#no2eu', '#notoeu', '#betteroffout', '#voteout', '#britainout', '#leaveeu', '#loveeuropeleaveeu', '#voteleave', '#beleave']
+
+brexit_track = ['#brexit', '#no2eu', '#notoeu', '#betteroffout', '#voteout', '#britainout', '#leaveeu', '#loveeuropeleaveeu', '#voteleave', '#beleave', '#yes2eu', '#yestoeu', '#betteroffin', '#votein', '#ukineu', '#bremain', '#strongerin', '#leadnotleave', '#voteremain']
+
 # debug print 1 item from my twitter stream
 # for status in tweepy.Cursor(api.home_timeline).items(1):
 #     # Process a single status
@@ -41,4 +47,5 @@ api = tweepy.API(auth)
  
 # start twitter stream (intermittent collection beginngin on 20:40 30/03/2016)
 twitter_stream = Stream(auth, MyListener())
-twitter_stream.filter(track=['#Brexit', '#brexit', '#bremain'])
+twitter_stream.filter(track=brexit_track)
+

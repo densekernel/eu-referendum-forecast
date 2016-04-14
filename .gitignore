@@ -1,2 +1,7 @@
 /data
+/pkl
+*.json
+*.pkl
+*.zip
+*.csv
 .env
