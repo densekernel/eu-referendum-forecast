@@ -1,5 +1,6 @@
 /data
 /pkl
+/.idea
 *.json
 *.pkl
 *.zip
