@@ -6,3 +6,17 @@
 *.zip
 *.csv
 .env
+
+# BrexitTcf files to ignore
+BrexitTcf/.gradle
+
+BrexitTcf/*.json
+
+BrexitTcf/.idea
+BrexitTcf/*.iml
+BrexitTcf/*.iws
+BrexitTcf/*.ipr
+
+BrexitTcf/build/
+BrexitTcf/out/
+BrexitTcf/projectFilesBackup/
