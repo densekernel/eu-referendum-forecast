@@ -34,11 +34,7 @@ This only works for tweets 1 week old or less. Twitter API doesn't return histor
 
 ## Reference
 
-* ```app/stream.py```: __TCF Streaming API__. To run, enter ```python stream.py```
-
-   TCF has two major components. The first one is Streaming - listening on Twitter for incoming tweets for the #Brexit track. 
-
-* ```BrexitTcf``` __TCF Search API__. See the corresponding __Installation__ section on how to install and run.
+<!--List all Python scripts and other components here. Use alphabetical order to keep things nice and clean.--> 
 
 * ```app/cooccurence.py```:
 
@@ -49,10 +45,13 @@ This only works for tweets 1 week old or less. Twitter API doesn't return histor
 
    First, you need to generate data for the heat maps. To do so, run ```python geo.py``` first.
 
-* ```app/main.py```
-
 * ```app/location_coord_dict.py``` assigns geolocation to tweets based on their ```user.location``` value. Queries OSM Nominatim to convert the user's address to a pair of coordinates.
   The output is a dictionary in the format ```{address -> [lat, long]}```. This dictionary is stored in ```app/location_dict.json```
 
-####  Search API
+* ```app/stream.py```: __TCF Streaming API__. To run, enter ```python stream.py```
 
+   TCF has two major components. The first one is Streaming - listening on Twitter for incoming tweets for the #Brexit track.
+
+* ```app/termfreq.py```: Run ```python termfreq.py``` to list term frequency metrics for tweets.
+
+* ```BrexitTcf``` __TCF Search API__. See the corresponding __Installation__ section on how to install and run.
