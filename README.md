@@ -36,22 +36,28 @@ This only works for tweets 1 week old or less. Twitter API doesn't return histor
 
 <!--List all Python scripts and other components here. Use alphabetical order to keep things nice and clean.--> 
 
-* ```app/cooccurence.py```:
+* ```app/cooccurence.py```: - Python script to built a co-occurence matrix of all the words in a tweet which can return the most common words associated with a tweet
 
-* ```app/geo.py``` Generates tweet coordinates into ```geo_data.json```, the file used by ```map.html``` for visualising tweets over the map of the UK.
+* ```app/FrequencyAnalysis.ipynb``` - An iPython notebook covering the analysis of frequency distributions within the Brexit dataset
 
-* ```app/map.html``` Displays tweet heat map over the UK: blue represents tweets for staying in the EU, red represents tweets for leaving the EU. Selecting 'Overlap heatmaps' plots both 
+* ```app/geo.py``` - Generates tweet coordinates into ```geo_data.json```, the file used by ```map.html``` for visualising tweets over the map of the UK.
+
+* ```app/map.html``` - Displays tweet heat map over the UK: blue represents tweets for staying in the EU, red represents tweets for leaving the EU. Selecting 'Overlap heatmaps' plots both 
 'leave' and 'stay' heat maps on top of each other. Blue will then represent majority pro-stay areas, red - majority pro-leave, and purple - highly-contested areas. 
 
    First, you need to generate data for the heat maps. To do so, run ```python geo.py``` first.
 
-* ```app/location_coord_dict.py``` assigns geolocation to tweets based on their ```user.location``` value. Queries OSM Nominatim to convert the user's address to a pair of coordinates.
+* ```app/location_coord_dict.py``` - Assigns geolocation to tweets based on their ```user.location``` value. Queries OSM Nominatim to convert the user's address to a pair of coordinates.
   The output is a dictionary in the format ```{address -> [lat, long]}```. This dictionary is stored in ```app/location_dict.json```
 
-* ```app/stream.py```: __TCF Streaming API__. To run, enter ```python stream.py```
+* ```app/reprocess.py``` - Function to remove extraenous HTML or special characters via Regex
 
-   TCF has two major components. The first one is Streaming - listening on Twitter for incoming tweets for the #Brexit track.
+* ```app/sentiment.py``` - Python script to calculate sentiment analysis via unsupervised "Semantic Orientation"
 
-* ```app/termfreq.py```: Run ```python termfreq.py``` to list term frequency metrics for tweets.
+* ```app/SentimentClassification.ipynb```  - iPython notebook covering the subjectivity and sentiment classification steps neccessary to convert a tweet to a resultant vote for the UK EU referendum
+
+* ```app/stream.py``` - __TCF Streaming API__. Python scripts for listening to the Twitter Streaming API for new tweets related to the #Brexit track
+
+* ```app/vis.py`` - Function to plot the occurence of the word 'stay' or 'leave' in a tweet within a 5 minute resample
 
 * ```BrexitTcf``` __TCF Search API__. See the corresponding __Installation__ section on how to install and run.
