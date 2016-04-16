@@ -60,9 +60,6 @@ location_coord_dict = {}
 # get all distinct user locations. Ignore those of records where coordinates are specified
 # noinspection PyComparisonWithNone
 distinct_user_locations = pd.Series(tweet_df[tweet_df['userLocation'] != None]['userLocation']).unique()
-# for user_location in distinct_user_locations:
-#     user_coords = get_coords(user_location)
-#     location_coord_dict[user_location] = user_coords
 
 loc_count = len(distinct_user_locations)
 print loc_count
