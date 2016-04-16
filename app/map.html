@@ -24,6 +24,9 @@
     <br/>
     <label for="radio-overlap">Overlap heatmaps</label>
     <input type="radio" name="toggle" id="radio-overlap" value="both"/>
+    <label for="radius">Heatmap point radius</label>
+    <input type="text" id="radius"/>
+    <button id="update-radius">Update</button>
 </div>
 
 
@@ -34,53 +37,79 @@
     });
     // Initialise an empty map
     var map = L.map('map');
-    var heat;
+
+    var stayCfg = {
+        gradient: {0: 'blue', 1: 'blue'},
+        minOpacity: 0.08,
+        radius: 20
+    };
+    var leaveCfg = {
+        gradient: {0: 'red', 1: 'red'},
+        minOpacity: 0.08,
+        radius: 20
+    };
+
+    var stayHeat, leaveHeat;
 
     // Add the tiles to the map, and initialise the view in the middle of Europe
     map.addLayer(mytiles).setView([54.5, -2], 6);
-
     var loadedData = {};
+
+    var reloadHeatmap = function () {
+        var option = $('input[name="toggle"]:checked').val();
+        var leavePoints = loadedData.features.filter(function (feature) {
+            return feature.properties.pro_leave
+        }).map(function (feature) {
+            return [
+                feature.geometry.coordinates[1],
+                feature.geometry.coordinates[0],
+                1
+            ];
+        });
+
+        var stayPoints = loadedData.features.filter(function (feature) {
+            return feature.properties.pro_stay
+        }).map(function (feature) {
+            return [
+                feature.geometry.coordinates[1],
+                feature.geometry.coordinates[0],
+                1
+            ];
+        });
+
+        if (stayHeat !== undefined)
+            map.removeLayer(stayHeat);
+
+        if (leaveHeat !== undefined)
+            map.removeLayer(leaveHeat);
+
+        stayHeat = L.heatLayer(stayPoints, stayCfg);
+        leaveHeat = L.heatLayer(leavePoints, leaveCfg);
+        switch (option) {
+            case "leave":
+                leaveHeat.addTo(map);
+                break;
+            case "stay":
+                stayHeat.addTo(map);
+                break;
+            case "both":
+                leaveHeat.addTo(map);
+                stayHeat.addTo(map);
+                break;
+        }
+    };
 
     // Read the GeoJSON data with jQuery, and create a circleMarker element for each tweet
     // Each tweet will be represented by a nice red dot
     $.getJSON("./geo_data.json", function (data) {
         loadedData = data;
     });
+    $('input[name="toggle"]').change(reloadHeatmap);
 
-    $('input[name="toggle"]').change(function () {
-        var option = $('input[name="toggle"]:checked').val();
-        var points;
-        if (heat !== undefined)
-            map.removeLayer(heat);
-        switch (option) {
-            case "leave":
-                points = loadedData.features.filter(function (feature) {
-                    return feature.properties.pro_leave
-                }).map(function (feature) {
-                    return [
-                        feature.geometry.coordinates[1],
-                        feature.geometry.coordinates[0],
-                        1
-                    ];
-                });
-                break;
-            case "stay":
-                points = loadedData.features.filter(function (feature) {
-                    return feature.properties.pro_stay
-                }).map(function (feature) {
-                    return [
-                        feature.geometry.coordinates[1],
-                        feature.geometry.coordinates[0],
-                        1
-                    ];
-                });
-                break;
-            case "both":
-                // TODO mix both leave and stay
-                points = [];
-                break;
-        }
-        heat = L.heatLayer(points, {minOpacity: 0.08, radius: 20}).addTo(map);
+    $('#update-radius').click(function () {
+        stayCfg.radius = parseInt($('#radius').val());
+        leaveCfg.radius = parseInt($('#radius').val());
+        reloadHeatmap();
     });
 </script>
 </body>
