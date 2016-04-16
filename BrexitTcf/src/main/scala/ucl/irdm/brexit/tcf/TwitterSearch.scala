@@ -90,9 +90,6 @@ object Main {
 
   val logger = Logger.getLogger(Main.getClass)
 
-//  val startTime = OffsetDateTime.parse("2016-04-02T00:00:00+00:00", DateTimeFormatter.ISO_DATE_TIME)
-//  val endTime = OffsetDateTime.parse("2016-04-13T00:00:00+00:00", DateTimeFormatter.ISO_DATE_TIME)
-
   val terms = Array("#brexit", "#no2eu", "#notoeu", "#betteroffout", "#voteout", "#britainout",
     "#leaveeu", "#loveeuropeleaveeu", "#voteleave", "#beleave", "#yes2eu", "#yestoeu",
     "#betteroffin", "#votein", "#ukineu", "#bremain", "#strongerin", "#leadnotleave", "#voteremain")
