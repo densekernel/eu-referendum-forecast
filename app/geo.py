@@ -20,10 +20,10 @@ def read_tweets():
             for line in f:
                 tweet = json.loads(line, encoding='latin-1')
                 # filtering tweets with some location data included
-                if tweet['place']:
+                if tweet['place'] or tweet['user']['location']:
                     tweet_list.append({
                         'place': tweet['place'],
-                        # TODO add column for user.location when integrating with geolocation dictionary
+                        'userLocation': tweet['user']['location'],
                         # TODO add columns for stay/leave and sentiment (pos/neg) once Jonny creates them.
                         # TODO For now, assigns random values to these fields.
                         'topic': random.choice(topics),
@@ -37,9 +37,14 @@ def read_tweets():
 
 def map_tweet(tweet, location_coord_dict):
     try:
-        coordinates = tweet['place']['boundingBoxCoordinates'][0][0]
-    except KeyError:
-        coordinates = location_coord_dict.get(tweet['userLocation'], None)
+        bounding_box = tweet['place']['boundingBoxCoordinates'][0][0]
+        coordinates = [bounding_box['latitude'], bounding_box['longitude']]
+    except:
+        # filter out generic locations, even if they have coordinates in the geolocation dict.
+        if tweet['userLocation'] in ['United Kingdom', 'UK', 'England', 'London']:
+            coordinates = None
+        else:
+            coordinates = location_coord_dict.get(tweet['userLocation'], None)
 
     return {
         'coordinates': coordinates,
@@ -48,21 +53,31 @@ def map_tweet(tweet, location_coord_dict):
     }
 
 
-def map_tweets_to_coordinates(df):
-    # TODO uncomment when loading geolocation dict
-    # location_coord_dict = {}
-
-    # distinct_user_locations = pd.Series(df[df['userLocation'] is not None]['userLocation']).unique()
-    # for user_location in distinct_user_locations:
-    #     user_coords = get_coords(user_location)
-    #     location_coord_dict[user_location] = user_coords
-
+def map_tweets_to_coordinates(df, geolocation_dict):
     coordinate_labeled_tweets = []
+    row_count = len(df.index)
     for i, tweet in df.iterrows():
-        coordinate_labeled_tweets.append(map_tweet(tweet, {}))
+        if i % 10000 == 0:
+            print 'Attached coordinates to %d tweets out of %d' % (i, row_count)
+        coordinate_labeled_tweets.append(map_tweet(tweet, geolocation_dict))
 
-    coordinate_labeled_tweets = filter(lambda tw: tw['coordinates'] != None, coordinate_labeled_tweets)
+    coordinate_labeled_tweets = filter(is_legit_tweet, coordinate_labeled_tweets)
     return coordinate_labeled_tweets
+
+
+def is_legit_tweet(coord_tweet):
+    return coord_tweet['coordinates'] != None and -12 < coord_tweet['coordinates'][1] < 2.5
+
+
+def is_pro_leave(tweet):
+    # positive towards 'leave'
+    if tweet['topic'] == 'leave' and tweet['sentiment'] == 4:
+        return True
+    # negative towards 'stay'
+    if tweet['topic'] == 'stay' and tweet['sentiment'] == 0:
+        return True
+    # otherwise, it's pro stay
+    return False
 
 
 def gen_geo_data(tweets_with_locations):
@@ -77,13 +92,15 @@ def gen_geo_data(tweets_with_locations):
             'geometry': {
                 'type': 'Point',
                 'coordinates': [
-                    tweet['coordinates']['longitude'],
-                    tweet['coordinates']['latitude']
+                    # coordinates are reversed for some reason - Leaflet JS needs them like this
+                    tweet['coordinates'][1],
+                    tweet['coordinates'][0]
                 ]
             },
             'properties': {
                 'text': '',
-                'created_at': ''
+                'created_at': '',
+                'vote': 'leave' if is_pro_leave(tweet) else 'remain'
             }
         }
 
@@ -95,7 +112,9 @@ def gen_geo_data(tweets_with_locations):
 # now to write the JSON file for the map.
 
 tweet_df = read_tweets()
-tweets_with_locations = map_tweets_to_coordinates(tweet_df)
+with open('location_dict.json', 'r') as fin:
+    tweet_location_dict = json.load(fin, encoding='latin-1')
+tweets_with_locations = map_tweets_to_coordinates(tweet_df, tweet_location_dict)
 geo_data = gen_geo_data(tweets_with_locations)
 
 # Save geo data

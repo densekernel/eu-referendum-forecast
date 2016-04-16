@@ -15,6 +15,18 @@
 <body>
 <!-- this goes in the <body> -->
 <div id="map"></div>
+<div id="radio-buttons">
+    <label for="radio-leave">View Leave Tweets</label>
+    <input type="radio" name="toggle" id="radio-leave"/>
+    <br/>
+    <label for="radio-remain">View Remain Tweets</label>
+    <input type="radio" name="toggle" id="radio-remain"/>
+    <br/>
+    <label for="radio-overlap">Overlap heatmaps</label>
+    <input type="radio" name="toggle" id="radio-overlap"/>
+</div>
+
+
 <script type="text/javascript">
     // Load the tile images from OpenStreetMap
     var mytiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -26,9 +38,13 @@
     // Add the tiles to the map, and initialise the view in the middle of Europe
     map.addLayer(mytiles).setView([55, 0], 5);
 
+    var loadedData = {};
+
     // Read the GeoJSON data with jQuery, and create a circleMarker element for each tweet
     // Each tweet will be represented by a nice red dot
     $.getJSON("./geo_data.json", function (data) {
+        loadedData = data;
+
         var myStyle = {
             radius: 1,
             fillColor: "red",
@@ -53,8 +69,10 @@
             ];
         });
 
-        var heat = L.heatLayer(points, {radius: 50}).addTo(map);
+        var heat = L.heatLayer(points, {radius: 20}).addTo(map);
     });
+
+    $('input[name="toggle"]')
 </script>
 </body>
 </html>
