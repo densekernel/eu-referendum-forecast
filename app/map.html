@@ -8,7 +8,7 @@
     <!-- this goes in the <head> -->
     <style>
         #map {
-            height: 600px;
+            height: 750px;
         }
     </style>
 </head>
@@ -17,13 +17,13 @@
 <div id="map"></div>
 <div id="radio-buttons">
     <label for="radio-leave">View Leave Tweets</label>
-    <input type="radio" name="toggle" id="radio-leave"/>
+    <input type="radio" name="toggle" id="radio-leave" value="leave"/>
     <br/>
     <label for="radio-remain">View Remain Tweets</label>
-    <input type="radio" name="toggle" id="radio-remain"/>
+    <input type="radio" name="toggle" id="radio-remain" value="stay"/>
     <br/>
     <label for="radio-overlap">Overlap heatmaps</label>
-    <input type="radio" name="toggle" id="radio-overlap"/>
+    <input type="radio" name="toggle" id="radio-overlap" value="both"/>
 </div>
 
 
@@ -34,9 +34,10 @@
     });
     // Initialise an empty map
     var map = L.map('map');
+    var heat;
 
     // Add the tiles to the map, and initialise the view in the middle of Europe
-    map.addLayer(mytiles).setView([55, 0], 5);
+    map.addLayer(mytiles).setView([54.5, -2], 6);
 
     var loadedData = {};
 
@@ -44,35 +45,43 @@
     // Each tweet will be represented by a nice red dot
     $.getJSON("./geo_data.json", function (data) {
         loadedData = data;
-
-        var myStyle = {
-            radius: 1,
-            fillColor: "red",
-            color: "red",
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 1
-        };
-
-        var geojson = L.geoJson(data, {
-            pointToLayer: function (feature, latlng) {
-                return L.circleMarker(latlng, myStyle);
-            }
-        });
-        //geojson.addTo(map);
-
-        var points = data.features.map(function (feature) {
-            return [
-                feature.geometry.coordinates[1],
-                feature.geometry.coordinates[0],
-                1
-            ];
-        });
-
-        var heat = L.heatLayer(points, {radius: 20}).addTo(map);
     });
 
-    $('input[name="toggle"]')
+    $('input[name="toggle"]').change(function () {
+        var option = $('input[name="toggle"]:checked').val();
+        var points;
+        if (heat !== undefined)
+            map.removeLayer(heat);
+        switch (option) {
+            case "leave":
+                points = loadedData.features.filter(function (feature) {
+                    return feature.properties.pro_leave
+                }).map(function (feature) {
+                    return [
+                        feature.geometry.coordinates[1],
+                        feature.geometry.coordinates[0],
+                        1
+                    ];
+                });
+                break;
+            case "stay":
+                points = loadedData.features.filter(function (feature) {
+                    return feature.properties.pro_stay
+                }).map(function (feature) {
+                    return [
+                        feature.geometry.coordinates[1],
+                        feature.geometry.coordinates[0],
+                        1
+                    ];
+                });
+                break;
+            case "both":
+                // TODO mix both leave and stay
+                points = [];
+                break;
+        }
+        heat = L.heatLayer(points, {minOpacity: 0.065, radius: 20}).addTo(map);
+    });
 </script>
 </body>
 </html>
