@@ -34,11 +34,6 @@ auth.set_access_token(access_token, access_secret)
 
 api = tweepy.API(auth)
 
-# debug print 1 item from my twitter stream
-# for status in tweepy.Cursor(api.home_timeline).items(1):
-#     # Process a single status
-#     print(status.text)
- 
 # start twitter stream (intermittent collection beginngin on 20:40 30/03/2016)
 twitter_stream = Stream(auth, MyListener())
 twitter_stream.filter(track=['#Brexit', '#brexit', '#bremain'])

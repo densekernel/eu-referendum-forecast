@@ -12,33 +12,6 @@ def read_tweets():
     print "Got the tweets"
     return df
 
-# read DataFrame containing tweet location info, topic and sentiment toward that topic
-# def read_tweets():
-#     data_list = ['../data/tweets_line/2016-04-' + str(x) + '.json' for x in
-#                  ['03', '04', '05', '06', '07', '08', '09', '10', '11', '12']]
-#     # data_list = ['../data/tweets_line/2016-04-' + str(x) + '.json' for x in ['10', '11']]
-#     tweet_list = []
-#
-#     for day_file in data_list:
-#         with open(day_file, 'r') as f:
-#             print 'processing file ' + day_file
-#             for line in f:
-#                 tweet = json.loads(line, encoding='latin-1')
-#                 # filtering tweets with some location data included
-#                 if tweet['place'] or tweet['user']['location']:
-#                     tweet_list.append({
-#                         'place': tweet['place'],
-#                         'userLocation': tweet['user']['location'],
-#                         # TODO add columns for stay/leave and sentiment (pos/neg) once Jonny creates them.
-#                         # TODO For now, assigns random values to these fields.
-#                         'topic': random.choice(topics),
-#                         'sentiment': random.choice(sentiments)
-#                     })
-#
-#     df = pd.DataFrame(tweet_list)
-#     print len(df.index)
-#     return df
-
 
 def tweet_coords(tweet, location_coord_dict):
     try:

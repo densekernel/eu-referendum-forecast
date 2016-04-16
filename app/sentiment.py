@@ -74,19 +74,3 @@ for term, n in p_t.items():
     semantic_orientation[term] = positive_assoc - negative_assoc
 
 print("#brexit: %f" % semantic_orientation['#brexit'])
-
-
-# com_max = []
-# # For each term, look for the most common co-occurrent terms
-# for t1 in com:
-#     t1_max_terms = max(com[t1].items(), key=operator.itemgetter(1))[:5]
-#     for t2 in t1_max_terms:
-#         com_max.append(((t1, t2), com[t1][t2]))
-# # Get the most frequent co-occurrences
-# terms_max = sorted(com_max, key=operator.itemgetter(1), reverse=True)
-# print(terms_max[:5])
-
-# print("Co-occurrence for %s:" % search_word)
-# print(count_search.most_common(20))
-
-# n_docs is the total n. of tweets

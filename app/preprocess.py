@@ -32,8 +32,3 @@ def preprocess(s, lowercase=False):
         tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
     return tokens
  
-# with open('brexit.json, 'r') as f:
-#     for line in f:
-#         tweet = json.loads(line)
-#         tokens = preprocess(tweet['text'])
-#         do_something_else(tokens)
