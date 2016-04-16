@@ -58,6 +58,6 @@ This only works for tweets 1 week old or less. Twitter API doesn't return histor
 
 * ```app/stream.py``` - __TCF Streaming API__. Python scripts for listening to the Twitter Streaming API for new tweets related to the #Brexit track
 
-* ```app/vis.py`` - Function to plot the occurence of the word 'stay' or 'leave' in a tweet within a 5 minute resample
+* ```app/vis.py``` - Function to plot the occurence of the word 'stay' or 'leave' in a tweet within a 5 minute resample
 
 * ```BrexitTcf``` __TCF Search API__. See the corresponding __Installation__ section on how to install and run.
