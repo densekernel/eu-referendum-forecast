@@ -61,3 +61,8 @@ This only works for tweets 1 week old or less. Twitter API doesn't return histor
 * ```app/vis.py``` - Function to plot the occurence of the word 'stay' or 'leave' in a tweet within a 5 minute resample
 
 * ```BrexitTcf``` __TCF Search API__. See the corresponding __Installation__ section on how to install and run.
+
+*  ```./sentiment_tf/run_tf.sh``` - script to run training loop; you can set your own parameters, folders, hook interations
+*  ```./sentiment_tf/decode_tf.sh``` - script to run load sentiment classifier from the model genearated during training (by default in /data folder)
+*  ```tensorboard --logdir=${PWD}``` - to visualise events during training, run tensorboard inside the folder where events file is stored (e.g. /data)
+
