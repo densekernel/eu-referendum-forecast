@@ -1,0 +1,2 @@
+model_checkpoint_path: "data/infer.ckpt-26000"
+all_model_checkpoint_paths: "data/infer.ckpt-26000"
